@@ -1,0 +1,53 @@
+<head>
+    <link rel="stylesheet" href="static/listings/css/base.css'">
+
+    <style>
+        .review-list {
+        max-width: 600px;
+        margin: auto;
+        margin-bottom: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .review {
+        background: var(--secondary);
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .review:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .review-text {
+        font-size: 18px;
+        font-style: italic;
+        color: var(--text);
+        margin-bottom: 12px;
+    }
+
+    .review-author {
+        font-size: 15px;
+        font-weight: bold;
+        color: var(--text);
+        opacity: 0.8;
+    }
+    </style>
+</head>
+    <body>
+    <div class="review-list">
+        {% for review in page_obj %}
+            <div class="review">
+                <p class="review-text">"{{ review.text }}"</p>
+                <p class="review-author">— {{ review.user.first_name }}</p>
+            </div>
+        {% empty %}
+            <p>Пока нет отзывов. Будьте первым!</p>
+        {% endfor %}
+    </div>
+</body>

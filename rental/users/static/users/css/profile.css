@@ -1,0 +1,115 @@
+/* страница пользователя */
+.profile-container {
+    max-width: 1000px;
+    margin: 50px auto;
+    padding: 20px;
+    background: var(--background);
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.profile-header {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+/* Контент страницы: левая и правая части */
+.profile-content {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+/* Левая часть: краткая информация */
+.profile-left {
+    flex: 1;
+    padding: 20px;
+    background: var(--secondary);
+    border-radius: 8px;
+}
+
+.profile-left p {
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 10px 0;
+}
+
+.profile-left p strong {
+    color: #555;
+}
+
+/* Правая часть: формы изменения данных */
+.profile-right {
+    flex: 1;
+    padding: 20px;
+    background: var(--secondary);
+    border-radius: 8px;
+}
+
+.profile-right form {
+    margin-bottom: 20px;
+}
+
+.profile-right input.form-control,
+.profile-right select.form-control,
+.profile-right textarea.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-top: 5px;
+    transition: border-color 0.3s ease;
+}
+
+.profile-right input.form-control:focus,
+.profile-right select.form-control:focus,
+.profile-right textarea.form-control:focus {
+    border-color: var(--buttons);
+    outline: none;
+}
+
+.profile-right .btn {
+    width: 100%;
+    margin-top: 10px;
+}
+
+/* История просмотров и кнопка очистки */
+.profile-history {
+    margin-top: 30px;
+    padding: 20px;
+    background: var(--secondary);
+    border-radius: 8px;
+}
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.clear-history-btn {
+    font-size: 14px;
+    padding: 6px 12px;
+}
+
+.profile-history ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.profile-history ul li {
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.profile-history ul li a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.profile-history ul li a:hover {
+    text-decoration: underline;
+}

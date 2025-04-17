@@ -1,0 +1,163 @@
+{% extends 'listings/base.html' %}
+{% load static %}
+
+{% block title %}Регистрация{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'users/css/user.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="auth">
+    <div class="container">
+        <h2>Регистрация</h2>
+        <form method="POST">
+            {% csrf_token %}
+            
+            <!-- Общие ошибки формы -->
+            {% if form.non_field_errors %}
+                <div class="form-errors">
+                    <ul>
+                        {% for error in form.non_field_errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            <!-- Поля формы с обработкой ошибок -->
+            <div class="form-group">
+                {{ form.username.label_tag }}
+                {{ form.username }}
+                {% if form.username.errors %}
+                    <ul class="field-errors">
+                        {% for error in form.username.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                {{ form.email.label_tag }}
+                {{ form.email }}
+                {% if form.email.errors %}
+                    <ul class="field-errors">
+                        {% for error in form.email.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                {{ form.first_name.label_tag }}
+                {{ form.first_name }}
+                {% if form.first_name.errors %}
+                    <ul class="field-errors">
+                        {% for error in form.first_name.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                {{ form.last_name.label_tag }}
+                {{ form.last_name }}
+                {% if form.last_name.errors %}
+                    <ul class="field-errors">
+                        {% for error in form.last_name.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                {{ form.middle_name.label_tag }}
+                {{ form.middle_name }}
+                {% if form.middle_name.errors %}
+                    <ul class="field-errors">
+                        {% for error in form.middle_name.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                {{ form.city.label_tag }}
+                {{ form.city }}
+                {% if form.city.errors %}
+                    <ul class="field-errors">
+                        {% for error in form.city.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                {{ form.phone_number.label_tag }}
+                {{ form.phone_number }}
+                {% if form.phone_number.errors %}
+                    <ul class="field-errors">
+                        {% for error in form.phone_number.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="id_role">Роль</label>
+                <div class="role-selection">
+                    {% for key, value in form.role.field.choices %}
+                        <label class="role-option {% if form.role.value == key %}active{% endif %}" for="id_role_{{ forloop.counter }}">
+                            <input type="radio" id="id_role_{{ forloop.counter }}" name="role" value="{{ key }}" {% if form.role.value == key %} checked {% endif %}>
+                            <span>{{ value }}</span>
+                        </label>
+                    {% endfor %}
+                </div>
+                {% if form.role.errors %}
+                    <ul class="field-errors">
+                        {% for error in form.role.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                {{ form.password1.label_tag }}
+                {{ form.password1 }}
+                {% if form.password1.errors %}
+                    <ul class="field-errors">
+                        {% for error in form.password1.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                {{ form.password2.label_tag }}
+                {{ form.password2 }}
+                {% if form.password2.errors %}
+                    <ul class="field-errors">
+                        {% for error in form.password2.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+        </form>
+    </div>
+</section>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}&libraries=places"></script>
+
+<script src="{% static 'users/js/register.js' %}"></script>
+
+{% endblock %}

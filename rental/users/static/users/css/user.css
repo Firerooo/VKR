@@ -1,0 +1,86 @@
+/* страница входа и регестрации пользователя */
+.auth {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    background: var(--secondary);
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.auth h2 {
+    text-align: center;
+    color: var(--text);
+    margin-bottom: 20px;
+}
+
+.auth .form-group {
+    margin-bottom: 15px;
+}
+
+.auth label {
+    display: block;
+    font-weight: bold;
+    color: var(--text);
+}
+
+.auth input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.auth button {
+    width: 100%;
+    padding: 10px;
+    font-size: 18px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.auth button:hover {
+    background: #0056b3;
+}
+
+.role-selection {
+    display: flex;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.role-option {
+    display: flex;
+    align-items: center;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: border-color 0.3s ease, background-color 0.3s ease,
+                transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.role-option:hover {
+    background-color: #f9f9f9;
+}
+
+.role-option.active,
+.role-option input:checked + span {
+    border-color: var(--primary, #007bff);
+    background-color: #e9f2ff;
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.5);
+}
+
+
+.role-option input {
+    display: none;
+}
+
+.role-option span {
+    display: block;
+}

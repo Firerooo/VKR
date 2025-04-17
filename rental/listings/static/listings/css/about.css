@@ -1,0 +1,24 @@
+/* Страница "О нас" */
+.about {
+    padding: 50px 20px;
+    max-width: 800px;
+    margin: auto;
+    text-align: center;
+}
+
+.about h1, .about h2 {
+    color: var(--primary);
+}
+
+.about ul {
+    text-align: left;
+    list-style: none;
+    padding: 0;
+}
+
+.about ul li {
+    padding: 10px;
+    background: var(--secondary);
+    border-radius: 5px;
+    margin-bottom: 10px;
+}

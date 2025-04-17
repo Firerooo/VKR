@@ -1,0 +1,188 @@
+/* Главный экран (Hero Section) */
+.hero {
+    background: var(--primary);
+    color: var(--text);
+    text-align: center;
+    padding: 150px 20px;
+}
+
+.hero-content {
+    max-width: 600px;
+    margin: auto;
+}
+
+.hero h1 {
+    font-size: 50px;
+    margin-bottom: 10px;
+}
+
+.hero p {
+    font-size: 25px;
+    margin-bottom: 20px;
+}
+
+/* Поисковая строка */
+.search-wrapper {
+    position: relative;
+    max-width: 550px;
+    margin: auto;
+}
+
+.search-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: white;
+    border-radius: 25px;
+    overflow: hidden; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.search-input {
+    flex: 1;
+    border: none;
+    padding: 12px 15px;
+    font-size: 16px;
+    outline: none;
+}
+
+.search-btn {
+    background: var(--success);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.search-btn:hover {
+    background: #218838;
+}
+
+.homepage-autocomplete-list {
+    position: absolute;
+    top: 100%;
+    left: 16px;
+    width: 25%;
+    max-height: 200px;
+    overflow-y: auto;
+    background: var(--secondary);
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    text-align: left;
+}
+
+/* Стили для элементов автодополнения */
+.homepage-autocomplete-item {
+    padding: 8px 15px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.homepage-autocomplete-item:hover,
+.homepage-autocomplete-item.active {
+    background-color: #ccc;
+}
+
+.search-btn {
+    background: var(--success);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.search-btn:hover {
+    background: #218838; 
+}
+
+/* Раздел "Почему мы?" */
+.features {
+    text-align: center;
+    margin: 20px 0;
+    padding: 100px 20px;
+    background: var(--background);
+}
+
+.features h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+.feature-list {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.feature {
+    max-width: 250px;
+    padding: 10px;
+    background: var(--primary);
+    border-radius: 10px;
+}
+
+/* Секция для арендодателей */
+.landlord-info {
+    background: var(--secondary);
+    text-align: center;
+    padding: 100px 20px;
+}
+
+.landlord-info .container {
+    max-width: 800px;
+    margin: auto;
+}
+
+.landlord-info h2 {
+    font-size: 28px;
+    color: var(--text);
+    margin-bottom: 15px;
+}
+
+.landlord-info p {
+    font-size: 18px;
+    color: var(--text);
+    margin-bottom: 20px;
+}
+
+.landlord-info .btn-primary {
+    background: var(--buttons);
+    color: white;
+    padding: 12px 20px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+.landlord-info .btn-primary:hover {
+    background: #0056b3;
+}
+
+/* Секция отзывов */
+.reviews {
+    background: var(--background);
+    text-align: center;
+    padding: 80px 20px;
+}
+
+.reviews .container {
+    max-width: 800px;
+    margin: auto;
+    margin-bottom: 30px;
+}
+
+.reviews h2 {
+    font-size: 32px;
+    color: var(--text);
+    margin-bottom: 25px;
+    font-weight: bold;
+}

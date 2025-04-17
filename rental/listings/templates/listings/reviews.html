@@ -1,0 +1,82 @@
+{% extends 'listings/base.html' %}
+{% load static %}
+
+{% block title %}Отзывы - Аренда жилья{% endblock %}
+
+{% block head %}    
+    <link rel="stylesheet" href="{% static 'listings/css/reviews.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="reviews-page">
+    <div class="container">
+        <h1>Отзывы пользователей</h1>
+        {% include 'includes/review.html'%}
+        <button id="leave-review-btn" class="btn btn-success">Оставить отзыв</button>
+        
+        <!-- Пагинация -->
+        <div class="pagination">
+            <span class="current">Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</span>
+            <div class="pagination-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-secondary"><-</a>
+                    {% if page_obj.number > 2 %}
+                        <a href="?page=1" class="btn btn-secondary">1</a>
+                        {% if page_obj.number > 3 %}
+                            <span>...</span>
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+                {% for num in page_obj.paginator.page_range %}
+                    {% if num >= page_obj.number|add:"-1" and num <= page_obj.number|add:"1" %}
+                        {% if num == page_obj.number %}
+                            <span class="btn btn-primary">{{ num }}</span>
+                        {% else %}
+                            <a href="?page={{ num }}" class="btn btn-secondary">{{ num }}</a>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+                
+                {% if page_obj.has_next %}
+                    {% if page_obj.number < page_obj.paginator.num_pages|add:"-2" %}
+                        <span>...</span>
+                    {% endif %}
+                    {% if page_obj.number < page_obj.paginator.num_pages|add:"-1" %}
+                        <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-secondary">{{ page_obj.paginator.num_pages }}</a>
+                    {% endif %}
+                    <a href="?page={{ page_obj.next_page_number }}" class="btn btn-secondary">-></a>
+                {% endif %}
+            </div>
+        </div>
+        
+    </div>
+</section>
+
+<!-- Модальное окно для отзыва (если пользователь авторизован) -->
+{% if user.is_authenticated %}
+<div id="review-modal" class="review-modal">
+    <div class="review-modal-content">
+        <span class="review-close-modal" onclick="closeReviewModal()">&times;</span>
+        <h2>Оставить отзыв</h2>
+        <form method="post" action="{% url 'listings:add_review' %}" class="review-form">
+            {% csrf_token %}
+            <textarea name="text" class="form-control" rows="4" placeholder="Напишите ваш отзыв..."></textarea>
+            <button type="submit">Отправить</button>
+        </form>
+    </div>
+</div>
+{% else %}
+<!-- Модальное окно для авторизации -->
+<div id="auth-modal" class="review-modal" style="display: none;">
+    <div class="review-modal-content">
+        <p>Чтобы оставить отзыв, необходимо авторизоваться. Желаете авторизоваться?</p>
+        <div class="review-modal-buttons">
+            <button id="confirm-auth" class="btn btn-primary">Да</button>
+            <button id="close-modal" class="btn btn-secondary">Нет</button>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<script src="{% static 'listings/js/reviews.js' %}"></script>
+{% endblock %}

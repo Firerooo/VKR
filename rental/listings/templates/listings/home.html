@@ -1,0 +1,75 @@
+{% extends 'listings/base.html' %}
+
+{% block title %}Главная - Аренда жилья{% endblock %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'listings/css/home.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-content">
+        <h1>Найдите идеальное жильё</h1>
+        <p>Аренда и покупка квартир по всему миру</p>
+    </div>
+    <div class="search-wrapper">
+        <div class="search-box">
+            <input
+                type="text"
+                placeholder="Введите город..."
+                class="search-input"
+                id="homepage-city-search"
+            >
+            <button class="search-btn" id="homepage-search-btn">Поиск</button>
+        </div>
+        <div id="homepage-autocomplete-list" class="homepage-autocomplete-list"></div>
+      </div>
+      
+</section>
+
+<!-- Дополнительные секции страницы (например, особенности, отзывы, и т.д.) -->
+<section class="features">
+    <h2>Почему выбирают нас?</h2>
+    <div class="feature-list">
+        <div class="feature">
+            <h3>Широкий выбор</h3>
+            <p>Большое количество объявлений в разных городах</p>
+        </div>
+        <div class="feature">
+            <h3>Удобный поиск</h3>
+            <p>Фильтры и карты помогут найти идеальное жильё</p>
+        </div>
+        <div class="feature">
+            <h3>Надёжные сделки</h3>
+            <p>Проверенные продавцы и безопасные платежи</p>
+        </div>
+    </div>
+    <div class="buttons">
+        <a href="{% url 'listings:about' %}" class="btn">Подробнее</a>
+    </div>
+</section>
+
+<section class="landlord-info">
+    <div class="container">
+        <h2>Сдавайте жильё легко и быстро</h2>
+        <p>Размещайте свои объявления на нашей платформе и находите арендаторов без лишних хлопот.</p>
+        {% if user.is_authenticated and user.role == "seller" %}
+            <a href="{% url 'listings:apartment-create' %}" class="btn">Добавить объявление</a>
+        {% endif %}
+    </div>
+</section>
+
+<section class="reviews">
+    <div class="container">
+        <h2>Отзывы наших пользователей</h2>
+        {% include 'includes/review.html'%}
+    </div>
+    <a href="{% url 'listings:reviews_list' %}" class="btn">Все отзывы</a>
+</section>
+<script>
+    var getCitiesUrl = "{% url 'listings:get_cities' %}";
+    var apartmentsUrl = "{% url 'listings:apartments' %}";
+</script>
+<script src="{% static 'listings/js/home.js' %}"></script>
+{% endblock %}

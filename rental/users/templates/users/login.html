@@ -1,0 +1,29 @@
+{% extends 'listings/base.html' %}
+{% load static %}
+
+{% block title %}Вход{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'users/css/user.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="auth">
+    <div class="container">
+        <h2>Вход в систему</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ form.username.label_tag }} {{ form.username }}
+            </div>
+            <div class="form-group">
+                {{ form.password.label_tag }} {{ form.password }}
+            </div>
+            <button type="submit" class="btn btn-primary">Войти</button>
+        </form>
+        <p class="text-center mt-3">
+            Нет аккаунта? <a href="{% url 'users:register' %}">Зарегистрируйтесь</a>
+        </p>
+    </div>
+</section>
+{% endblock %}

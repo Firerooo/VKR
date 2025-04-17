@@ -1,0 +1,47 @@
+{% extends "listings/base.html" %}
+{% load static %}
+
+{% block title %}Мои объявления{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'listings/css/apartment.css' %}">
+{% endblock %}
+
+
+{% block content %}
+<div class="my-listings-container">
+  <div class="listings-header">
+    <h2>Мои объявления</h2>
+    <a href="{% url 'listings:apartment-create' %}" class="btn btn-success add-listing-btn">Добавить новое объявление</a>
+  </div>
+
+  <section class="listings-statistics">
+    <p>Общее количество объявлений: {{ listings|length }}</p>
+    <p>Общее количество просмотров: {{ total_views }}</p>
+  </section>
+  
+  <div class="listings-grid">
+    {% for apartment in listings %}
+      <div class="listing-card">
+        {% with apartment.photos.first as photo %}
+          <a href="{% url 'listings:apartment-detail' apartment.pk %}" class="url-apartment">
+            {% if photo %}
+              <img src="{{ photo.image.url }}" alt="Фото объявления">
+            {% else %}
+              <img src="{% static 'images/no-image.jpg' %}" alt="Нет фото">
+            {% endif %}
+          </a>
+        {% endwith %}
+        <div class="listing-info">
+          <a href="{% url 'listings:apartment-detail' apartment.pk %}" class="url-apartment">
+            <h3>{{ apartment.title }}</h3>
+          </a>
+          <p>Просмотров: {{ apartment.total_views }}</p>
+        </div>
+      </div>
+    {% empty %}
+      <p>У вас нет размещённых объявлений.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

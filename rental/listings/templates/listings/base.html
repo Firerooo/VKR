@@ -1,0 +1,87 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}Аренда жилья{% endblock %}</title>
+        <link rel="stylesheet" href="{% static 'listings/css/base.css' %}">
+        {% block head %}{% endblock %}
+    </head>
+<body>
+    <header>
+        {% block header %}
+        <div class="divHeader">
+            <h3 class="logo-Header">
+                <a class="logo-Header-url" href="{% url 'listings:home' %}" hx-target="#main-content" hx-push-url="true">HOMENIC</a>
+            </h3>
+            <nav>
+                <ul>
+                    <li><a href="{% url 'listings:apartments' %}">Квартиры</a></li>
+                    {% if user.is_authenticated and user.role == "buyer" %}
+                        <li><a href="{% url 'recommendations:recommendations' %}">Рекомендации</a></li>
+                    {% endif %}
+                    <li><a href="{% url 'listings:reviews_list' %}">Отзывы</a></li>
+                    {% if user.is_authenticated %}
+                        <li class="header-dropdown">
+                            <a href="#">Пользователь</a>
+                            <ul class="header-dropdown-menu">
+                                <li><a href="{% url 'users:profile' %}">Профиль</a></li>
+                                {% if user.role == "seller" %}
+                                    <li><a href="{% url 'listings:my_listings' %}">Мои объявления</a></li>
+                                {% endif %}
+                                <li><a style="color:red" href="{% url 'users:logout' %}">Выйти</a></li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li><a href="{% url 'users:login' %}" class="btn">Войти</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+        {% endblock %}
+    </header>
+
+    {% if messages %}
+    <div class="alert-container">
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+  
+    
+    <main id="main-content">
+        {% block content %}{% endblock %}
+    </main>
+    
+
+    <footer>
+        <div class="blocks container">
+            <div class="footer-logo-urls">
+                <h4 class="footer-logo"><a href="{% url 'listings:home' %}" hx-target="#main-content" hx-push-url="true">HOMENIC</a></h4>
+                <ul class="footer-urls">
+                    <li class="footer-url"><a href="{% url 'listings:about' %}">О нас</a></li>
+                    <li class="footer-url"><a href="{% url 'listings:privacy' %}">Политика конфиденциальности</a></li>
+                </ul>
+            </div>
+            <hr style="border: none; border-top: 1px solid rgba(88, 86, 86, 0.5); margin: 0 40px;">
+
+            <div class="footer-contact">
+                <ul class="footer-contact-list">
+                    <li class="footer-text">Наши контакты:</li>
+                    <li>Адрес главного офиса: г. Казань, ул. Кремлёвская, д. 35</li>
+                    <li>Номер телефона: +7 (111) 111-11-11</li>
+                </ul>
+            </div>
+            <p class="inc">© 2025 Аренда жилья</p>
+
+          </div>
+    </footer>
+
+    <script src="{% static 'listings/js/base.js' %}"></script>
+
+</body>
+</html>

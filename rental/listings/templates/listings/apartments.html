@@ -1,0 +1,193 @@
+{% extends "listings/base.html" %}
+
+{% load static %}
+{% load abbr_filters %}
+
+{% block title %}Объявления{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'listings/css/apartment.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="apartments-page">
+  <div class="listings-sidebar">
+    <form id="filter-form" method="get" class="filter-form">
+      <div class="dropdown-container">
+        <div class="toggle-switch">
+          <input type="radio" id="rent" name="status" value="RENT" {% if request.GET.status == "RENT" or not request.GET.status %}checked{% endif %}>
+          <input type="radio" id="sale" name="status" value="SALE" {% if request.GET.status == "SALE" %}checked{% endif %}>
+          <label for="rent" class="toggle-option">Аренда</label>
+          <label for="sale" class="toggle-option">Покупка</label>
+          <div class="toggle-slider"></div>
+        </div>                
+      </div>
+      <input
+        type="text"
+        id="city-search"
+        name="city"
+        value="{{ city }}"
+        placeholder="Введите город..."
+      >
+      <div id="autocomplete-list" class="autocomplete-list"></div>
+      
+      <div class="dropdown-container">
+        <button class="btn dropdown-toggle" type="button">Цена</button>
+        <div class="dropdown-menu price-menu">
+          <input type="number" name="price_min" placeholder="Мин" value="{{ request.GET.price_min }}">
+          <input type="number" name="price_max" placeholder="Макс" value="{{ request.GET.price_max }}">
+        </div>
+      </div>
+      
+      <div class="dropdown-container">
+        <button class="btn dropdown-toggle" type="button">Люди</button>
+        <div class="dropdown-menu people-menu">
+          <label for="renters">Арендаторы</label>
+          <div class="number-input">
+            <button type="button" class="decrement">–</button>
+            <input
+              type="number"
+              id="renters"
+              name="max_people"
+              value="{{ request.GET.max_people|default:'1' }}"
+            />
+            <button type="button" class="increment">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="dropdown-container">
+        <button class="btn dropdown-toggle" type="button">Удобства</button>
+        <div class="dropdown-menu amenities-menu">
+          <div class="amenities-columns">
+            {% for category, amenities in amenities_by_category.items %}
+              <div class="amenities-column">
+                <h4>{{ category }}</h4>
+                {% for amenity in amenities %}
+                <label>
+                    <input type="checkbox" name="amenities" value="{{ amenity.id }}"
+                      {% if amenity.id|stringformat:"s" in selected_amenities %}checked{% endif %}>
+                    {{ amenity.name }}
+                  </label>
+                {% endfor %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      <div class="dropdown-container">
+        <button class="btn dropdown-toggle" type="button">Дополнительно</button>
+        <div class="dropdown-menu additional-menu">
+          <!-- Фильтр для валюты -->
+          <div class="filter-group">
+            <span class="filter-label">Валюта:</span>
+            <div class="toggle-group">
+              <input type="radio" id="currency-all" name="currency" value="" {% if not request.GET.currency %}checked{% endif %}>
+              <label for="currency-all">Все</label>
+              
+              <input type="radio" id="currency-rub" name="currency" value="RUB" {% if request.GET.currency == "RUB" %}checked{% endif %}>
+              <label for="currency-rub">₽</label>
+              
+              <input type="radio" id="currency-usd" name="currency" value="USD" {% if request.GET.currency == "USD" %}checked{% endif %}>
+              <label for="currency-usd">$</label>
+              
+              <input type="radio" id="currency-eur" name="currency" value="EUR" {% if request.GET.currency == "EUR" %}checked{% endif %}>
+              <label for="currency-eur">€</label>
+            </div>
+          </div>
+          <!-- Фильтр для срока аренды (показывать только для аренды) -->
+          {% if request.GET.status == "RENT" %}
+          <div class="filter-group">
+            <span class="filter-label">Срок аренды:</span>
+            <div class="toggle-group">
+              <input type="radio" id="rental-all" name="rental_period" value="" {% if not request.GET.rental_period %}checked{% endif %}>
+              <label for="rental-all">Все</label>
+              
+              <input type="radio" id="rental-daily" name="rental_period" value="DAILY" {% if request.GET.rental_period == "DAILY" %}checked{% endif %}>
+              <label for="rental-daily">сутки</label>
+              
+              <input type="radio" id="rental-monthly" name="rental_period" value="MONTHLY" {% if request.GET.rental_period == "MONTHLY" %}checked{% endif %}>
+              <label for="rental-monthly">месяц</label>
+            </div>
+          </div>
+          {% endif %}
+        </div>      
+      </div>      
+
+      <!-- Кнопка Применить -->
+      <button type="submit" class="btn btn-success">Применить</button>
+      <!-- Красная кнопка сброса фильтров -->
+      <div class="reset-container">
+        <button type="button" id="reset-filters" class="btn btn-danger">Сброс фильтров</button>
+      </div>
+    </form>
+  </div>
+  
+  <div class="listings-container">
+    <div class="listings-left">
+      <div class="listings-grid">
+        {% for apartment in page_obj %}
+          <div class="listing-card">
+            {% with apartment.photos.first as photo %}
+              <a href="{% url 'listings:apartment-detail' apartment.pk %}" class="url-apartment">
+                {% if photo %}
+                  <img src="{{ photo.image.url }}" alt="Фото">
+                {% else %}
+                  <img src="{% static 'listings/images/no-image.jpg' %}" alt="Нет фото">
+                {% endif %}
+              </a>
+            {% endwith %}
+            <a href="{% url 'listings:apartment-detail' apartment.pk %}" class="url-apartment">
+              <h3>{{ apartment.title }}</h3>
+            </a>
+            <p>
+              {{ apartment.price|floatformat:0 }} {{ apartment.get_currency_display|abbr }}
+              {% if apartment.status == "RENT" and apartment.rental_period %}
+                / {{ apartment.get_rental_period_display|abbr }}
+              {% endif %}
+            </p>              
+            <p style="margin-top: 30px;">
+              {{ apartment.rooms }} комн. • {{ apartment.max_people }} чел. • {{ apartment.square_meters|floatformat:0 }} м²
+            </p>
+          </div>
+        {% empty %}
+          <p>Объявлений не найдено</p>
+        {% endfor %}
+      </div>
+  
+      <!-- Пагинатор -->
+      <div class="pagination">
+        <span class="current">Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</span>
+        <div class="pagination-links">
+          {% if page_obj.has_previous %}
+            <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.previous_page_number }}" class="btn btn-secondary"><-</a>
+          {% endif %}
+          {% for num in page_obj.paginator.page_range %}
+            {% if num >= page_obj.number|add:"-1" and num <= page_obj.number|add:"1" %}
+              {% if num == page_obj.number %}
+                <span class="btn btn-primary">{{ num }}</span>
+              {% else %}
+                <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ num }}" class="btn btn-secondary">{{ num }}</a>
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+
+          {% if page_obj.has_next %}
+            <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.next_page_number }}" class="btn btn-secondary">-></a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  
+    <!-- Правый столбец: карта -->
+    <div class="listings-right">
+      <div id="map" class="listings-map"></div>
+    </div>
+  </div>
+</section>
+
+<script id="markers_data" type="application/json">{{ markers_json|safe }}</script>
+<script> var MAP_ID = "{{ MAP_ID }}";</script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}&libraries=marker,places"></script>
+<script src="{% static 'listings/js/apartments.js' %}"></script>
+{% endblock %}

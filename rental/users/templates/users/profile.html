@@ -1,0 +1,66 @@
+{% extends "listings/base.html" %}
+{% load static %}
+
+{% block title %}Профиль пользователя{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'users/css/profile.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <h2 class="profile-header">Добро пожаловать, {{ user.first_name }}!</h2>
+
+    <div class="profile-content">
+        <!-- Левая часть: Краткая информация -->
+        <div class="profile-left">
+            <h3>Краткая информация</h3>
+            <p><strong>ФИО:</strong> {{ user.first_name }} {{ user.last_name }} {{ user.middle_name|default:"" }}</p>
+            <p><strong>Роль:</strong> {{ user.get_role_display }}</p>
+            <p><strong>Город проживания:</strong> {{ user.city }}</p>
+            <p><strong>Адрес электронной почты:</strong> {{ user.email }}</p>
+            <p><strong>Номер телефона:</strong> {{ user.phone_number }}</p>
+        </div>
+
+        <!-- Правая часть: Формы изменения данных -->
+        <div class="profile-right">
+            <h3>Изменение данных</h3>
+            <form method="post" action="{% url 'users:profile' %}">
+                {% csrf_token %}
+                {{ profile_form.as_p }}
+ 
+                <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+            </form>
+
+            <h3>Изменение пароля</h3>
+            <form method="post" action="{% url 'users:change_password' %}">
+                {% csrf_token %}
+                {{ password_form.as_p }}
+                <button type="submit" class="btn btn-danger">Изменить пароль</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- История просмотренных объявлений с кнопкой очистки -->
+    <div class="profile-history">
+        <div class="history-header">
+            <h3>История просмотренных объявлений</h3>
+            <a href="{% url 'users:clear_history' %}" class="btn clear-history-btn">Очистить историю</a>
+        </div>
+        {% if viewed_apartments %}
+            <ul>
+                {% for item in viewed_apartments %}
+                    <li>
+                        <a href="{% url 'listings:apartment-detail' item.apartment.pk %}">
+                            {{ item.apartment.title }}
+                        </a>
+                        — просмотрено {{ item.viewed_at|date:"d.m.Y H:i" }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>История пустая.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

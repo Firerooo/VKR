@@ -1,0 +1,691 @@
+/* страница объявлений */
+.apartments-page {
+    padding: 50px 20px;
+}
+
+/* Стили для строки поиска */
+#city-search {
+    width: 250px;
+    padding: 10px 15px;
+    font-size: 16px;
+    border: 1px solid var(--secondary);
+    border-radius: 4px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  /* Состояние при фокусе */
+  #city-search:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  }
+  
+  /* Стили для списка автодополнения */
+  .autocomplete-list {
+    position: absolute;
+    top: 100%;                  
+    left: 230px;
+    width: 250px;
+    max-height: 200px;
+    overflow-y: auto;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-top: none;           
+    border-radius: 0 0 4px 4px;   
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+  }
+  
+  /* Стили для элементов списка */
+  .autocomplete-item {
+    padding: 8px 15px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+  
+  /* Hover и активное состояние для элемента списка */
+  .autocomplete-item:hover,
+  .autocomplete-item.active {
+    background-color: #f1f1f1;
+  }
+
+/* Стили  фильтров */
+.listings-sidebar {
+    margin-top: 20px;
+}
+
+.filter-form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+    padding: 0px 20px;
+}
+
+.filter-form label,
+.filter-form input {
+    margin-right: 10px;
+}
+
+
+.filter-form .btn-success:hover {
+    background: #218838;
+}
+
+/* Контейнер переключателя */
+.toggle-switch {
+    position: relative;
+    width: 200px;  /* подберите ширину под ваш дизайн */
+    height: 40px;
+    background: #e0e0e0;
+    border-radius: 25px;
+    margin: 10px 0;
+    overflow: hidden;
+  }
+  
+  /* Скрываем сами radio-кнопки */
+  .toggle-switch input {
+    display: none;
+  }
+  
+  /* Метки для переключения */
+  .toggle-switch .toggle-option {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    line-height: 40px;
+    text-align: center;
+    font-size: 16px;
+    color: #666;
+    z-index: 2;
+    cursor: pointer;
+    user-select: none;
+    transition: color 0.3s;
+  }
+  
+  /* Расположение меток */
+  .toggle-switch .toggle-option:first-of-type {
+    left: 0;
+  }
+  .toggle-switch .toggle-option:last-of-type {
+    right: 0;
+  }
+  
+  /* Слайдер, отображающий активную область */
+  .toggle-switch .toggle-slider {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: calc(50% - 8px);
+    height: calc(100% - 8px);
+    background-color: var(--primary); 
+    border-radius: 20px;
+    transition: left 0.3s;
+    z-index: 1;
+  }
+  
+  /* При выборе «Покупка» (SALE) слайдер смещается вправо */
+  #sale:checked ~ .toggle-slider {
+    left: calc(50% + 4px);
+  }
+  
+  /* Подсветка активного варианта */
+  #rent:checked ~ label[for="rent"],
+  #sale:checked ~ label[for="sale"] {
+    color: #fff;
+  }
+
+  .reset-container {
+    margin-left: auto; 
+    text-align: right
+}
+
+/* Стили для контейнеров выпадающих меню */
+.dropdown-container {
+    position: relative;
+    display: inline-block;
+}
+
+/* Само выпадающее меню */
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 110%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--secondary);
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    z-index: 10;
+  }
+  
+/* Стили для формы цены — input-поля в одну строку */
+.price-menu {
+    gap: 10px;
+    align-items: center;
+}
+
+.price-menu input {
+    width: 100px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.price-menu input::placeholder {
+    color: #888;
+}
+
+/* Стилизация числового блока */
+.number-input {
+    display: flex;
+    align-items: center;
+    margin-top: 8px;
+}
+
+.number-input button {
+    padding: 5px 10px;
+    background-color: #eee;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.number-input input {
+    width: 50px;
+    text-align: center;
+    margin: 0 5px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Расширяем выпадающее меню «Удобства» */
+.dropdown-menu.amenities-menu {
+    width: 600px;
+}
+
+/* Контейнер для колонок с удобствами */
+.amenities-columns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.amenities-column {
+    flex: 0 0 calc(33.33% - 10px);
+}
+
+.amenities-column label {
+    margin-bottom: 4px;
+    display: block;     
+}
+  
+.amenities-column label input[type="checkbox"] {
+    margin-right: 2px; 
+}
+  
+/* Дополнительное оформление заголовков колонок */
+.amenities-column h4 {
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+/* Группа переключателей */
+.toggle-group {
+    display: inline-flex;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  
+  /* Скрываем радио-кнопки */
+  .toggle-group input[type="radio"] {
+    display: none;
+  }
+  
+  /* Стили для лейблов переключателей */
+  .toggle-group label {
+    flex: 1;
+    padding: 8px 12px;
+    text-align: center;
+    background-color: #f5f5f5;
+    color: #444;
+    cursor: pointer;
+    font-size: 14px;
+    user-select: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  /* Разделитель между переключателями */
+  .toggle-group label:not(:last-child) {
+    border-right: 1px solid #ccc;
+  }
+  
+  /* Состояние выбранного переключателя */
+  .toggle-group input[type="radio"]:checked + label {
+    background-color: #007bff;  /* основной цвет — поменяйте при необходимости */
+    color: #fff;
+  }
+  
+/* Основной контейнер – два столбца */
+.listings-container {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    min-height: 80vh;
+  }
+  
+  .listings-left {
+    width: 60%;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+    padding-right: 10px;
+  }
+  
+  .listings-right {
+    width: 40%;
+  }
+  
+  .listings-map {
+    width: 100%;
+    height: 100%;
+    border: 1px solid var(--secondary);
+    border-radius: 4px;
+  }
+  
+  /* Сетка объявлений */
+  .listings-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  
+  /* Карточка объявления */
+  .listing-card {
+    background-color: var(--secondary);
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 15px;
+    text-align: center;
+  }
+  
+  .listing-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+  
+  .listing-card h3 {
+    margin: 10px 0 5px;
+    font-size: 1.2rem;
+  }
+  
+.listing-card p {
+    margin: 5px 0;
+    color: #555;
+}
+
+.custom-marker {
+    background-color: var(--primary);
+    color: #fff;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 5px 10px;
+    text-align: center;
+    border-radius: 4px;
+    position: relative;
+    white-space: nowrap;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Псевдоэлемент для создания "указки" в нижней части маркера */
+.custom-marker::after {
+    content: "";
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 8px 6px 0 6px;
+    border-style: solid;
+    border-color: var(--primary) transparent transparent transparent;
+}
+
+.url-apartment {
+    text-decoration: none;
+    font-weight: bold;
+    color: var(--text);
+}
+
+
+/* персональная страница объявлений */
+.carousel-container {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 30px;
+  }
+
+  .carousel-slide {
+    display: flex;
+    transition: transform 0.5s ease;
+  }
+
+  .carousel-slide img {
+    width: 100vw;
+    height: 500px;
+    object-fit: cover;
+  }
+
+  .carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0,0,0,0.5);
+    color: white;
+    border: none;
+    padding: 15px;
+    cursor: pointer;
+    z-index: 10;
+  }
+
+  .carousel-btn.left { left: 10px; }
+  .carousel-btn.right { right: 10px; }
+
+  .apartment-content {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    margin: 40px 20px;
+  }
+
+  .apartment-main {
+    max-width: 800px;
+    flex: 1;
+  }
+
+.apartment-title {
+    font-size: 36px;            
+    text-transform: uppercase;  
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.apartment-address {
+    font-size: 20px;
+    color: #555;
+    margin-bottom: 20px;
+    display: flex;
+  }
+  
+  .address-icon {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 10px;
+  }
+  
+  .address-icon svg {
+    width: 20px;
+    height: 20px;
+    fill: #555;
+  }
+
+  .apartment-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  .detail-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 120px;
+  }
+  
+  .detail-icon svg {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .detail-text {
+    margin-top: 5px;
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+    color: #333;
+  }
+  
+
+.section-title {
+    font-size: 28px;           
+    font-weight: bold;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 5px;
+}
+
+.apartment-description {
+    font-size: 18px;
+    line-height: 1.6;  
+    margin-bottom: 30px;
+}
+
+.apartment-amenities {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.apartment-amenity {
+    display: inline-flex;
+    align-items: center;
+    background: #e8f5e9;
+    color: #28A745;
+    padding: 5px 12px;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+
+  .apartment-sidebar {
+    position: sticky;
+    top: 100px;
+    min-width: 300px;
+    height: fit-content;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: white;
+  }
+
+  .listing-map {
+    height: 600px;
+    margin: 40px 0;
+    border: 1px solid var(--secondary);
+    border-radius: 4px;
+  }
+
+  .buttons-container {
+    display: flex;         
+    gap: 10px;              
+    justify-content: center; 
+}
+
+.buttons-container .btn {
+    flex-shrink: 0;       
+}
+
+/* модальное окно с фото */
+/* Модальное окно (на весь экран) */
+.photos-modal {
+    display: none; /* скрыто по умолчанию */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.9);
+    z-index: 1000;
+  }
+  
+  /* Кнопка закрытия модального окна */
+  .photos-modal-close {
+    position: fixed;
+    top: 20px;
+    right: 35px;
+    color: #fff;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+  .photos-modal-close:hover,
+  .photos-modal-close:focus {
+    color: #bbb;
+  }
+  
+  /* Обёртка для основного контента модалки – центрируем по вертикали и горизонтали */
+  .photos-modal-content-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+  
+  /* Обёртка для главного изображения и стрелок.
+     Здесь мы используем flex-расположение, чтобы стрелочки располагались снаружи главного фото. */
+  .photos-modal-main-wrapper {
+    display: flex;
+    align-items: center;
+  }
+  
+  /* Главное изображение */
+  .photos-modal-main {
+    max-width: 90vw;
+    max-height: 90vh;
+    border: 3px solid #fff;
+    border-radius: 4px;
+    display: block;
+    margin: 10px 20px; 
+  }
+  
+  /* Стрелки навигации */
+  .photos-modal-arrow {
+    background-color: transparent; 
+    border: none;
+    color: #fff;
+    font-size: 40px;
+    cursor: pointer;
+    padding: 20px;
+  }
+
+  /* Ряд миниатюр, закреплённый внизу экрана */
+  .photos-modal-thumbnails {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: rgba(0,0,0,0.8);
+    display: flex;
+    justify-content: center;
+    gap: 10px;               
+    padding: 10px 0;
+    z-index: 1001;
+  }
+  .photos-modal-thumbnails img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    cursor: pointer;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    transition: border 0.3s ease;
+  }
+  
+.photos-modal-thumbnails img.active {
+    border: 2px solid #007bff;
+}
+
+
+
+/* модальное окно подтверждения удаления */
+.delete-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+  
+  .delete-modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 8px;
+    width: 300px;
+    text-align: center;
+    position: relative;
+  }
+  
+  /* Кнопка закрытия модального окна */
+  .delete-modal-close {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    color: #aaa;
+    font-size: 24px;
+    cursor: pointer;
+  }
+  
+  /* Кнопки действий */
+  .delete-modal-actions {
+    margin-top: 20px;
+  }
+  
+  .delete-modal-actions .btn {
+    margin: 0 10px;
+  }
+
+
+/* страница мои объявления */
+.my-listings-container {
+  max-width: 1200px;
+  margin: 50px auto;
+  padding: 20px;
+}
+
+.listings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.add-listing-btn {
+  padding: 10px 20px;
+  text-decoration: none;
+  color: #fff;
+}
+
+.listings-statistics {
+  margin-bottom: 20px;
+  font-size: 16px;
+  color: #555;
+}

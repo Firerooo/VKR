@@ -1,0 +1,137 @@
+{% extends "listings/base.html" %}
+
+{% load static %}
+{% load abbr_filters %}
+
+{% block title %}{{ apartment.title }}{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'listings/css/apartment.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="apartment-detail-page">
+    <div class="carousel-container">
+        <div class="carousel-slide" id="carouselSlide">
+            {% for photo in apartment.photos.all %}
+              <img src="{{ photo.image.url }}" alt="Фото" class="thumbnail">
+            {% endfor %}
+        </div>        
+            <button class="carousel-btn left" onclick="moveSlide(-1)">←</button>
+            <button class="carousel-btn right" onclick="moveSlide(1)">→</button>
+    </div>
+    
+    <div class="apartment-content">
+        <div class="apartment-main">
+            <div class="apartment-info">
+                <h1 class="apartment-title">{{ apartment.title }}</h1>
+                
+                <p class="apartment-address">
+                    <span class="address-icon">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="#555" viewBox="0 0 24 24" width="20" height="20">
+                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5 14.5 7.62 14.5 9 13.38 11.5 12 11.5z"/>
+                      </svg>
+                    </span>
+                    {{ apartment.address }}
+                  </p>
+                  <div class="apartment-details">
+                    <div class="detail-item">
+                      <span class="detail-icon">
+                        <img src="{% static 'listings/images/metr.png' %}">
+                      </span>
+                      <span class="detail-text">{{ apartment.square_meters|floatformat:0 }} м²</span>
+                    </div>
+                    <div class="detail-item">
+                      <span class="detail-icon">
+                        <img src="{% static 'listings/images/rooms.png' %}">
+                      </span>
+                      <span class="detail-text">{{ apartment.rooms }} комнаты</span>
+                    </div>
+                    <div class="detail-item">
+                      <span class="detail-icon">
+                        <img src="{% static 'listings/images/people.png' %}">
+                      </span>
+                      <span class="detail-text">{{ apartment.max_people }} человек</span>
+                    </div>
+                  </div>
+                  
+                <h3 class="section-title">Об объявлении</h3>
+                
+                <p class="apartment-description">{{ apartment.description }}</p>
+                
+                <h3 class="section-title">Удобства</h3>
+                <div class="amenities-columns">
+                    {% for category, amenities in amenities_by_category.items %}
+                    <div class="amenities-column">
+                        <h4>{{ category }}</h4>
+                        {% for item in amenities %}
+                        <label>
+                            <div class="apartment-amenity">
+                                <i style="margin-right: 5px;">✔</i> {{ item.amenity.name }}
+                            </div>
+                        </label>
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+              
+            <div id="map" class="listing-map"></div>
+        </div>
+        
+        <!-- Модальное окно для просмотра фотографий -->
+        <div id="photosModal" class="photos-modal">
+            <span class="photos-modal-close">&times;</span>
+            <div class="photos-modal-content-wrapper">
+            <div class="photos-modal-main-wrapper">
+                <button class="photos-modal-arrow left" id="modalLeftArrow">&larr;</button>
+                <img class="photos-modal-main" id="photosModalMain" src="" alt="Просмотр фотографии">
+                <button class="photos-modal-arrow right" id="modalRightArrow">&rarr;</button>
+            </div>
+            </div>
+            <div class="photos-modal-thumbnails" id="photosModalThumbnails">
+            <!-- Здесь динамически добавляются миниатюры -->
+            </div>
+        </div>
+
+  
+        <div class="apartment-sidebar">
+            <p><strong>Цена:</strong>              
+              {{ apartment.price|floatformat:0 }} {{ apartment.get_currency_display|abbr }}
+              {% if apartment.status == "RENT" and apartment.rental_period %}
+                / {{ apartment.get_rental_period_display|abbr }}
+              {% endif %}</p>
+            <p><strong>Телефон:</strong> {{ apartment.owner.phone_number }}</p>
+            <p><strong>Email:</strong> {{ apartment.owner.email }}</p>
+        
+            {% if user == apartment.owner %}
+            <hr>
+                <div class="buttons-container">
+                    <a href="{% url 'listings:apartment-edit' apartment.id %}" class="btn btn-primary">Редактировать</a>
+                    <form id="deleteForm" action="{% url 'listings:apartment-delete' apartment.pk %}" method="post">
+                        {% csrf_token %}
+                        <button type="button" class="btn btn-delete" id="deleteButton">Удалить</button>
+                    </form>                  
+                </div>    
+            {% endif %}
+        </div>
+        <!-- Модальное окно подтверждения -->
+        <div id="deleteModal" class="delete-modal">
+            <div class="delete-modal-content">
+                <span class="delete-modal-close">&times;</span>
+                <p>Вы действительно хотите удалить объявление?</p>
+                <div class="delete-modal-actions">
+                <button type="button" id="confirmDelete" class="btn btn-delete">Да, удалить</button>
+                <button type="button" id="cancelDelete" class="btn">Отмена</button>
+                </div>
+            </div>
+        </div>  
+    </div>
+</div>
+
+<script id="markers_data" type="application/json">{{ markers_json|safe }}</script>
+<script> var MAP_ID = "{{ MAP_ID }}";</script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}&libraries=marker,places"></script>
+<script src="{% static 'listings/js/apartment-detail.js' %}"></script>
+
+{% endblock %}

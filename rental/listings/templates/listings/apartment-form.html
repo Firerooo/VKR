@@ -1,0 +1,207 @@
+{% extends "listings/base.html" %}
+{% load static %}
+
+{% block title %}
+  {% if apartment %}
+    Редактирование объявления
+  {% else %}
+    Добавление объявления
+  {% endif %}
+{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'listings/css/apartment-form.css' %}">
+  {{ block.super }}
+{% endblock %}
+
+{% block content %}
+<div class="add-apartment-container">
+  <h2>
+    {% if apartment %}
+      Редактировать объявление
+    {% else %}
+      Добавить объявление
+    {% endif %}
+  </h2>
+
+  <form method="post" enctype="multipart/form-data" class="add-apartment-form">
+    {% csrf_token %}
+    
+    {{ form.non_field_errors }}
+
+    <div class="form-group">
+      {{ form.title.label_tag }} 
+      {{ form.title }}
+    </div>
+    
+    <div class="form-group">
+      {{ form.description.label_tag }} 
+      {{ form.description }}
+    </div>
+    <div class="form-group">
+      <label for="id_status">Статус объявления</label>
+      <div class="status-selection">
+        {% for key, value in form.status.field.choices %}
+          {% if value != "---------" %}
+            <label class="status-option {% if form.status.value == key %}active{% endif %}" for="id_status_{{ forloop.counter }}">
+              <input type="radio" id="id_status_{{ forloop.counter }}" name="status" value="{{ key }}" {% if form.status.value == key %}checked{% endif %}>
+              <span>{{ value }}</span>
+            </label>
+          {% endif %}
+        {% endfor %}
+      </div>
+      
+      {% if form.status.errors %}
+        <ul class="field-errors">
+          {% for error in form.status.errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+    
+    <div class="form-group">
+      {{ form.currency.label_tag }}
+      {{ form.currency }}
+      {% if form.currency.errors %}
+        <div class="error">{{ form.currency.errors }}</div>
+      {% endif %}
+    </div>
+    
+    <div class="form-group" id="rental_period_wrapper">
+      {{ form.rental_period.label_tag }}
+      {{ form.rental_period }}
+      {% if form.rental_period.errors %}
+        <div class="error">{{ form.rental_period.errors }}</div>
+      {% endif %}
+    </div>
+
+    <div class="form-group">
+      {{ form.price.label_tag }} 
+      {{ form.price }}
+    </div>
+    
+    <div class="form-group">
+      {{ form.city.label_tag }} 
+      {{ form.city }}
+    </div>
+    
+    <div class="form-group">
+      {{ form.address.label_tag }} 
+      {{ form.address }}
+    </div>
+    
+    <div class="form-group">
+      {{ form.rooms.label_tag }} 
+      {{ form.rooms }}
+    </div>
+    
+    <div class="form-group">
+      {{ form.square_meters.label_tag }} 
+      {{ form.square_meters }}
+      {% if form.square_meters.errors %}
+        <div class="error">{{ form.square_meters.errors }}</div>
+      {% endif %}
+    </div>
+    
+    <div class="form-group">
+      {{ form.max_people.label_tag }} 
+      {{ form.max_people }}
+    </div>
+
+    <input type="hidden" id="latitude" name="latitude" value="{{ form.latitude.value|default:'' }}">
+    <input type="hidden" id="longitude" name="longitude" value="{{ form.longitude.value|default:'' }}">
+
+    <div class="form-section">
+      <h3>Удобства</h3>
+      <div class="amenities-columns">
+        {% for category, amenities in amenities_by_category.items %}
+          <div class="amenities-column">
+            <h4>{{ category }}</h4>
+            {% for amenity in amenities %}
+              {% if apartment %}
+                {# Режим редактирования: amenity – словарь с ключами "amenity" и "selected" #}
+                <label>
+                  <input type="checkbox" name="{{ form.amenities.html_name }}" value="{{ amenity.amenity.id }}"
+                    {% if form.is_bound %}
+                      {% with selected=form.amenities.value %}
+                        {% if selected and amenity.amenity.id|stringformat:"s" in selected %}
+                          checked
+                        {% endif %}
+                      {% endwith %}
+                    {% else %}
+                      {% if amenity.selected %}checked{% endif %}
+                    {% endif %}
+                  >
+                  {{ amenity.amenity.name }}
+                </label>
+              {% else %}
+                {# Режим создания: amenity – объект модели Amenity #}
+                <label>
+                  <input type="checkbox" name="{{ form.amenities.html_name }}" value="{{ amenity.id }}"
+                    {% if form.is_bound %}
+                      {% with selected=form.amenities.value %}
+                        {% if selected and amenity.id|stringformat:"s" in selected %}
+                          checked
+                        {% endif %}
+                      {% endwith %}
+                    {% elif form.initial.amenities %}
+                      {% if amenity.id|stringformat:"s" in form.initial.amenities %}
+                        checked
+                      {% endif %}
+                    {% endif %}
+                  >
+                  {{ amenity.name }}
+                </label>
+              {% endif %}
+            {% endfor %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    {% if apartment %}
+      <div class="form-group">
+        <label>Загруженные фотографии:</label>
+        <div class="photo-preview">
+          {% for photo in apartment.photos.all %}
+            <div class="photo-item" data-photo-id="{{ photo.id }}">
+              <img src="{{ photo.image.url }}" alt="Фото" class="photo-thumbnail">
+              <button type="button" class="delete-photo-btn" title="Удалить фото">&times;</button>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
+    <label>
+      {% if apartment %}
+        Обновить фотографии:
+      {% else %}
+        Фотографии:
+      {% endif %}
+    </label>
+    <input type="file" name="photos" multiple accept="image/*">
+
+    {% if form.errors %}
+      <div class="form-errors">
+        <pre>{{ form.errors }}</pre>
+      </div>
+    {% endif %}
+
+    <button type="submit" class="success">
+      {% if apartment %}
+        Сохранить изменения
+      {% else %}
+        Опубликовать
+      {% endif %}
+    </button>
+  </form>
+</div>
+
+<script src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}&libraries=places"></script>
+<script src="{% static 'listings/js/add-apartment.js' %}"></script>
+{% if apartment %}
+  <script src="{% static 'listings/js/apartment-edit.js' %}"></script>
+{% endif %}
+{% endblock %}
