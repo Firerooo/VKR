@@ -73,7 +73,7 @@ def apartment_list(request):
     if status == "RENT" and rental_period:
         apartments = apartments.filter(rental_period=rental_period)
 
-    paginator = Paginator(apartments, 18)
+    paginator = Paginator(apartments, 9)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
